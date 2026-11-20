@@ -1,0 +1,19 @@
+# Nom fixe : sinon Docker le déduit du dossier (« backend »).
+name: mairiekm
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: keurmassar-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: keurmassar
+      POSTGRES_PASSWORD: keurmassar_dev
+      POSTGRES_DB: keurmassar
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
