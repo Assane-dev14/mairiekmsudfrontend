@@ -1,0 +1,156 @@
+.topbar {
+  background: var(--km-surface);
+  border-bottom: 1px solid var(--km-border);
+}
+
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+
+  div {
+    display: grid;
+    line-height: 1.25;
+  }
+
+  strong {
+    color: var(--km-green-900);
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--km-muted);
+  }
+}
+
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  display: grid;
+  gap: 32px;
+}
+
+.welcome {
+  padding: 28px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--km-green-800), var(--km-green-600));
+  color: #fff;
+  box-shadow: var(--km-shadow);
+
+  h1 {
+    margin-top: 12px;
+    font-size: 30px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    opacity: 0.9;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--km-yellow);
+  color: var(--km-green-900);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.profile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  margin: 24px 0 0;
+
+  dt {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  dd {
+    margin: 2px 0 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.tile {
+  padding: 20px;
+  border: 1px solid var(--km-border);
+  border-radius: 14px;
+  background: var(--km-surface);
+
+  h3 {
+    font-size: 17px;
+    color: var(--km-green-900);
+  }
+
+  p {
+    margin: 6px 0 14px;
+    color: var(--km-muted);
+  }
+}
+
+.soon {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--km-green-700);
+}
+
+.alert {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border-left: 4px solid var(--km-danger);
+  background: var(--km-danger-bg);
+  color: var(--km-danger);
+}
+
+.loading {
+  color: var(--km-muted);
+}
+
+@media (max-width: 600px) {
+  .identity span {
+    display: none;
+  }
+
+  .identity strong {
+    font-size: 14px;
+  }
+
+  .welcome {
+    padding: 22px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+}

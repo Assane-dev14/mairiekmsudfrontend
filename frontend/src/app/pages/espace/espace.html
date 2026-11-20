@@ -1,0 +1,54 @@
+<div class="flag-band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="identity">
+      <img src="logo-kms-192.png" width="44" height="44" alt="" />
+      <div>
+        <strong>Commune de Keur Massar Sud</strong>
+        <span>Portail citoyen</span>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline" (click)="logout()">Se déconnecter</button>
+  </div>
+</header>
+
+<main class="content">
+  @if (user(); as u) {
+    <section class="welcome">
+      <span class="badge">{{ roleLabel() }}</span>
+      <h1>Bonjour, {{ name() }}</h1>
+      <p>Vous êtes connecté à votre espace personnel.</p>
+
+      <dl class="profile">
+        <div>
+          <dt>Adresse e-mail</dt>
+          <dd>{{ u.email }}</dd>
+        </div>
+        <div>
+          <dt>Téléphone</dt>
+          <dd>{{ u.phone || 'Non renseigné' }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="soon-title">
+      <h2 id="soon-title">Bientôt dans votre espace</h2>
+      <ul class="tiles">
+        @for (s of shortcuts(); track s.title) {
+          <li class="tile">
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.text }}</p>
+            <span class="soon">En préparation</span>
+          </li>
+        }
+      </ul>
+    </section>
+  } @else if (loadError()) {
+    <div class="alert" role="alert">
+      Impossible de charger votre profil. Vérifiez votre connexion puis rechargez la page.
+    </div>
+  } @else {
+    <p class="loading" role="status">Chargement de votre espace…</p>
+  }
+</main>

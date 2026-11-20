@@ -1,0 +1,160 @@
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<div class="flag-band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <ul class="topbar-info">
+      @if (contact(); as c) {
+        <li><app-icon name="pin" [size]="16" />{{ c.address }}</li>
+        @if (c.phone) {
+          <li><app-icon name="phone" [size]="16" /><a [href]="'tel:' + c.phone">{{ c.phone }}</a></li>
+        }
+        <li class="hide-sm"><app-icon name="clock" [size]="16" />{{ c.openingHours }}</li>
+      }
+    </ul>
+    <a class="topbar-account" [routerLink]="auth.isLoggedIn() ? '/espace' : '/connexion'">
+      <app-icon name="user" [size]="16" />
+      {{ auth.isLoggedIn() ? 'Mon espace' : 'Espace citoyen' }}
+    </a>
+  </div>
+</div>
+
+<header class="header">
+  <div class="container header-inner">
+    <a routerLink="/" class="identity" aria-label="Accueil — Commune de Keur Massar Sud">
+      <img src="logo-kms-192.png" width="56" height="56" alt="" />
+      <span>
+        <small>République du Sénégal</small>
+        <strong>Commune de Keur Massar Sud</strong>
+      </span>
+    </a>
+
+    <form class="search" role="search" (ngSubmit)="search()">
+      <label for="global-search" class="sr-only">Rechercher sur le portail</label>
+      <input
+        id="global-search"
+        type="search"
+        name="q"
+        placeholder="Rechercher une démarche, un service…"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+        minlength="2"
+        maxlength="100"
+      />
+      <button type="submit" aria-label="Lancer la recherche"><app-icon name="search" /></button>
+    </form>
+
+    <button
+      type="button"
+      class="menu-toggle"
+      (click)="menuOpen.set(!menuOpen())"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="main-nav"
+    >
+      <app-icon [name]="menuOpen() ? 'close' : 'menu'" />
+      Menu
+    </button>
+  </div>
+
+  <nav class="nav" id="main-nav" aria-label="Navigation principale" [class.open]="menuOpen()">
+    <ul class="container nav-list">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a></li>
+      <li class="has-sub" [class.sub-open]="mairieOpen()">
+        <button type="button" (click)="mairieOpen.set(!mairieOpen())" [attr.aria-expanded]="mairieOpen()" aria-controls="sub-mairie">
+          La mairie <app-icon name="chevron" [size]="16" />
+        </button>
+        <ul class="sub" id="sub-mairie">
+          @for (item of mairieMenu; track item.link) {
+            <li><a [routerLink]="item.link" routerLinkActive="active">{{ item.label }}</a></li>
+          }
+        </ul>
+      </li>
+      <li><a routerLink="/demarches" routerLinkActive="active">Démarches</a></li>
+      <li><a routerLink="/actualites" routerLinkActive="active">Actualités</a></li>
+      <li><a routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+      <li><a routerLink="/contact" routerLinkActive="active">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+@for (a of urgent(); track a.id) {
+  <div class="urgent" role="region" aria-label="Annonce urgente">
+    <div class="container urgent-inner">
+      <app-icon name="alert" />
+      <p>
+        <strong>{{ a.title }}</strong>
+        @if (a.body) {
+          <span> — {{ a.body }}</span>
+        }
+        @if (link(a.linkUrl); as l) {
+          @if ('internal' in l) {
+            <a [routerLink]="l.internal">{{ a.linkLabel || 'En savoir plus' }}</a>
+          } @else {
+            <a [href]="l.external" target="_blank" rel="noopener">{{ a.linkLabel || 'En savoir plus' }}</a>
+          }
+        }
+      </p>
+      <button type="button" (click)="dismiss(a.id)" aria-label="Masquer cette annonce"><app-icon name="close" [size]="18" /></button>
+    </div>
+  </div>
+}
+
+<main id="contenu" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <section>
+      <div class="footer-identity">
+        <img src="logo-kms-192.png" width="48" height="48" alt="" />
+        <strong>Commune de Keur Massar Sud</strong>
+      </div>
+      <p>Portail officiel d’information et de démarches en ligne de la commune.</p>
+    </section>
+
+    <section aria-labelledby="footer-contact">
+      <h2 id="footer-contact">Coordonnées</h2>
+      @if (contact(); as c) {
+        <ul class="footer-contact">
+          <li><app-icon name="pin" [size]="16" />{{ c.address }}</li>
+          @if (c.phone) {
+            <li><app-icon name="phone" [size]="16" /><a [href]="'tel:' + c.phone">{{ c.phone }}</a></li>
+          }
+          @if (c.email) {
+            <li><app-icon name="mail" [size]="16" /><a [href]="'mailto:' + c.email">{{ c.email }}</a></li>
+          }
+          <li><app-icon name="clock" [size]="16" />{{ c.openingHours }}</li>
+        </ul>
+        @if (!c.validated) {
+          <p class="footer-note">Coordonnées en cours de validation par la mairie.</p>
+        }
+      } @else {
+        <p><a routerLink="/contact">Voir la page Contact</a></p>
+      }
+    </section>
+
+    <section aria-labelledby="footer-links">
+      <h2 id="footer-links">Accès rapides</h2>
+      <ul>
+        <li><a routerLink="/demarches">Démarches</a></li>
+        <li><a routerLink="/la-mairie/services">Annuaire des services</a></li>
+        <li><a routerLink="/actualites">Actualités</a></li>
+        <li><a routerLink="/faq">Questions fréquentes</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="footer-legal">
+      <h2 id="footer-legal">Informations légales</h2>
+      <ul>
+        @for (item of legalLinks; track item.link) {
+          <li><a [routerLink]="item.link">{{ item.label }}</a></li>
+        }
+      </ul>
+    </section>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">© {{ year }} Commune de Keur Massar Sud — République du Sénégal</div>
+  </div>
+</footer>

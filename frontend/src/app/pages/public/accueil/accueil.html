@@ -1,0 +1,138 @@
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <p class="eyebrow">Mairie de Keur Massar Sud</p>
+      <h1>{{ site()?.welcome?.title || 'Bienvenue sur le portail de la Commune de Keur Massar Sud' }}</h1>
+      @if (site()?.welcome; as w) {
+        <p class="message">{{ w.message }}</p>
+        @if (w.signature) {
+          <p class="signature">— {{ w.signature }}</p>
+        }
+      }
+
+      <form class="hero-search" role="search" (ngSubmit)="search()">
+        <label for="hero-search" class="sr-only">Que recherchez-vous ?</label>
+        <input
+          id="hero-search"
+          type="search"
+          name="q"
+          placeholder="Que recherchez-vous ? Ex. : certificat, état civil…"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          maxlength="100"
+        />
+        <button class="btn btn-primary" type="submit"><app-icon name="search" /> Rechercher</button>
+      </form>
+    </div>
+    <img class="hero-logo" src="logo-kms.png" width="480" height="480" alt="" fetchpriority="high" />
+  </div>
+</section>
+
+<section class="container quick" aria-labelledby="quick-title">
+  <h2 id="quick-title" class="sr-only">Accès rapides</h2>
+  <ul>
+    @for (q of quickLinks; track q.link) {
+      <li>
+        <a [routerLink]="q.link">
+          <span class="quick-icon"><app-icon [name]="q.icon" [size]="26" /></span>
+          <strong>{{ q.label }}</strong>
+          <span>{{ q.text }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>
+
+@if (campaigns().length) {
+  <section class="container section" aria-labelledby="campaigns-title">
+    <div class="section-head"><h2 id="campaigns-title">Campagnes en cours</h2></div>
+    <ul class="card-grid">
+      @for (c of campaigns(); track c.id) {
+        <li class="card campaign">
+          <app-icon name="megaphone" [size]="28" />
+          <h3>{{ c.title }}</h3>
+          @if (c.body) {
+            <p>{{ c.body }}</p>
+          }
+          @if (link(c.linkUrl); as l) {
+            @if ('internal' in l) {
+              <a [routerLink]="l.internal">{{ c.linkLabel || 'En savoir plus' }} <app-icon name="arrow" [size]="16" /></a>
+            } @else {
+              <a [href]="l.external" target="_blank" rel="noopener">{{ c.linkLabel || 'En savoir plus' }}</a>
+            }
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+<section class="container section" aria-labelledby="news-title">
+  <div class="section-head">
+    <h2 id="news-title">Dernières actualités</h2>
+    <a routerLink="/actualites">Toutes les actualités</a>
+  </div>
+  @if (news(); as items) {
+    @if (items.length) {
+      <ul class="card-grid">
+        @for (n of items; track n.slug) {
+          <li class="card news">
+            <div class="news-band" aria-hidden="true"></div>
+            <p class="meta">
+              @if (n.category) {
+                <span class="tag">{{ n.category }}</span>
+              }
+              {{ n.publishedAt | dateFr }}
+            </p>
+            <h3><a [routerLink]="['/actualites', n.slug]">{{ n.title }}</a></h3>
+            <p>{{ n.excerpt }}</p>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="state">Aucune actualité publiée pour le moment.</p>
+    }
+  } @else if (newsError()) {
+    <p class="state">Les actualités sont momentanément indisponibles.</p>
+  } @else {
+    <p class="state" role="status">Chargement des actualités…</p>
+  }
+</section>
+
+<section class="container section" aria-labelledby="mairie-title">
+  <div class="section-head">
+    <h2 id="mairie-title">La mairie</h2>
+    <a routerLink="/la-mairie/services">Annuaire des services</a>
+  </div>
+  <ul class="card-grid">
+    @for (p of mairiePages(); track p.slug) {
+      <li class="card">
+        <h3><a [routerLink]="['/la-mairie', p.slug]">{{ p.title }}</a></h3>
+        @if (p.summary) {
+          <p>{{ p.summary }}</p>
+        }
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="container section">
+  <div class="practical">
+    <div>
+      <h2>Infos pratiques</h2>
+      @if (site()?.contact; as c) {
+        <ul>
+          <li><app-icon name="pin" />{{ c.address }}</li>
+          <li><app-icon name="clock" />{{ c.openingHours }}</li>
+          @if (c.phone) {
+            <li><app-icon name="phone" /><a [href]="'tel:' + c.phone">{{ c.phone }}</a></li>
+          }
+        </ul>
+      }
+    </div>
+    <div class="practical-actions">
+      <a class="btn btn-primary" routerLink="/contact">Contacter la mairie</a>
+      <a class="btn btn-outline" routerLink="/faq"><app-icon name="help" /> Questions fréquentes</a>
+    </div>
+  </div>
+</section>
